@@ -1,0 +1,51 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Hello, Pod @Environment.MachineName</h1>
+
+    <button class="btn btn-primary mt-3 mb-3" onclick="postClicks()">Click!</button>
+    <button class="btn btn-primary" onclick="getClicks()">Update!</button>
+    <div class="row d-flex justify-content-center mt-3">
+        <div class="col-sm-7">
+            <textarea id="timestamps" class="form-control" rows="15" readonly></textarea>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script>
+        function postClicks() {
+             $.ajax({
+                type: "POST",
+                url: "@Url.Action("Clicks")",
+                data: {
+                     timestamp: Date.now()
+                },
+                success: function (data){
+                    console.log("Ajax success")
+                 },
+                error: function (data) {
+                    console.error("Ajax error")
+                }
+            })
+        }
+
+        function getClicks() {
+            $.ajax({
+                type: "GET",
+                url: "@Url.Action("Clicks")",
+                success: function (data){
+                    console.log("Ajax success")
+                    console.log(data)
+                    $("#timestamps").val(data.clicks.toString().replaceAll(",", ", "))
+                    
+                 },
+                error: function (data) {
+                    console.error("Ajax error")
+                }
+            })
+        }
+    </script>
+}

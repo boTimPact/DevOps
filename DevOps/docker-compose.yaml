@@ -1,0 +1,51 @@
+
+services:
+  webservice:
+    build: .
+    ports:
+      - "8080:80"
+    environment:
+      - ConnectionStrings__Default=User ID=root;Password=password123;Server=postgresServer;Port=5432;Database=TimestampDB;IntegratedSecurity=true;
+      - ASPNETCORE_URLS=http://+:80
+    depends_on: 
+      database:
+        condition: service_started
+    networks:
+      - dev
+
+  database:
+    image: "postgres:11.22-bullseye"
+    container_name: postgresServer
+    ports:
+      - "6543:5432"
+    restart: always
+    environment:
+      - POSTGRES_PASSWORD=password123
+      - POSTGRES_USER=root
+      - POSTGRES_DB=TimestampDB
+      - PGDATA=/var/lib/postgresql/data
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    networks:
+      - dev
+
+#  mysql:
+#    build:
+#      dockerfile: DockerfileSql
+#    container_name: mysql
+#    ports:
+#      - "3306:3306"
+#    restart: always
+#    environment:
+#      - MYSQL_ROOT_PASSWORD=1234
+#      - MYSQL_DATABASE=TestDB
+#    volumes:
+#      - db-data:/data
+#    networks:
+#      - dev
+
+volumes:
+  db-data:
+networks: 
+  dev:
+    driver: bridge

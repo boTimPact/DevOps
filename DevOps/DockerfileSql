@@ -1,0 +1,4 @@
+﻿FROM mysql
+WORKDIR /App/..
+
+COPY ./docker-entrypoint-initdb.d/test.sql ./docker-entrypoint-initdb.d
